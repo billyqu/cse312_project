@@ -1,23 +1,20 @@
 <html>
-<head>
+  <head>
     <title>CSE312 Sample Front End</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-</head>
-<body onload="welcome();">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <form>
+      <h2>Register Form</h2>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required />
 
-<h1>CSE312 Sample Page</h1>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required />
 
-<p id="paragraph">
-    This text is from the HTML file 🙂
-</p>
+      <input type="submit" value="Register" />
+    </form>
 
-<p>
-    Here's a flamingo:
-</p>
-
-<img src="image/flamingo.jpg" alt="It's a flamingo" class="my_image"/>
-
-
-<script src="functions.js"></script>
-</body>
+    <script src="functions.js"></script>
+  </body>
 </html>
