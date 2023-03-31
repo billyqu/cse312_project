@@ -16,6 +16,17 @@
 </p>
 
 <img src="image/flamingo.jpg" alt="It's a flamingo" class="my_image"/>
+    
+<form action="/image-upload" id="image-form" method="post" enctype="multipart/form-data">
+   <label for="image-form-comment">Comment: </label>
+   <textarea id="image-form-comment" name="comment" cols="40" rows="1"></textarea>
+   <br/>
+   <label for="image-form-comment">Comment: </label>
+   <textarea id="image-form-comment" name="comment" cols="40" rows="1"></textarea>
+   <br/>
+   <input type="submit" value="Post">
+    <input type="hidden" id="custId" name="custId" value="{{XSRF_token}}">
+</form>
 
 
 <script src="functions.js"></script>
