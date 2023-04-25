@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, render_template, redirect, url_for, session
 import pymongo
+import bcrypt
 
 app = Flask(__name__)
 app.secret_key = 'random generated key'
@@ -29,7 +30,11 @@ def registerAccount():
             jsonify({'success': False, 'message': 'Username is already in use'}))
         return response
     session['user'] = username
-    user = {'username': username, 'password': password}
+
+    salt = bcrypt.hashpw(password.encode(), salt)
+    hashed_password = bcrypt.hashpw(password.encode(), salt)
+
+    user = {'username': username, 'password': hashed_password}
     users_collection.insert_one(user)
     return redirect(url_for('index'))
 
