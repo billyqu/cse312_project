@@ -8,6 +8,7 @@ app.secret_key = 'random generated key'
 client = pymongo.MongoClient('mongo')
 db = client["main"]
 users_collection = db['users']
+users_id_collection = db['users_id']
 
 @app.route('/')
 def index():
@@ -29,12 +30,14 @@ def registerAccount():
         response = make_response(
             jsonify({'success': False, 'message': 'Username is already in use'}))
         return response
-    session['user'] = username
+    
+    user_id = get_next_id()
+    session['user'] = user_id
 
     salt = bcrypt.hashpw(password.encode(), salt)
     hashed_password = bcrypt.hashpw(password.encode(), salt)
 
-    user = {'username': username, 'password': hashed_password}
+    user = {'id': user_id, 'username': username, 'password': hashed_password}
     users_collection.insert_one(user)
     return redirect(url_for('index'))
 
@@ -46,8 +49,9 @@ def login():
     password = request.form['password']
 
     user = db.users.find_one({'username': username})
+    print(user)
     if user:
-        session['user'] = username
+        session['user'] = user['id']
         return redirect(url_for('index'))
     else:
         response = make_response(jsonify({'success': False, 'message': 'Error logging in. Try again.'}))
@@ -58,12 +62,21 @@ def getUser():
     user_session = session['user']
     if user_session:
         print(user_session, " usersession")
-        user = users_collection.find_one({'username': user_session})
+        user = users_collection.find_one({'id': user_session})
         print(user, " user")
         updated_user = user['username']
-        return jsonify({'user': {'username': updated_user}})
+        return jsonify({'id': user_session, 'user': {'username': updated_user}})
     return redirect(url_for('register'))
 
+def get_next_id():
+    id_object = users_id_collection.find_one({})
+    if id_object:
+        next_id = int(id_object['last_id']) + 1
+        users_id_collection.update_one({}, {"$set": {"last_id": next_id}})
+        return next_id
+    else:
+        users_id_collection.insert_one({"last_id": 1})
+        return 1
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)
