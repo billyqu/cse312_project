@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, redirect, url_for, session
+from flask import Flask, jsonify, request, render_template, redirect, url_for, session, make_response
 import pymongo
 
 app = Flask(__name__)
@@ -35,6 +35,18 @@ def registerAccount():
 
     # Redirect to index endpoint
     # return render_template('index.html')
+@app.route('/login', methods=["POST"])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+
+    user = db.users.find_one({'username': username})
+    if user:
+        session['user'] = username
+        return redirect(url_for('index'))
+    else:
+        response = make_response(jsonify({'success': False, 'message': 'Error logging in. Try again.'}))
+        return response
 
 @app.route('/get-user', methods=["GET"])
 def getUser():
@@ -45,7 +57,7 @@ def getUser():
         print(user, " user")
         updated_user = user['username']
         return jsonify({'user': {'username': updated_user}})
-    return redirect(url('register'))
+    return redirect(url_for('register'))
 
 
 if __name__ == '__main__':
