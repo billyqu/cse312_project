@@ -62,6 +62,9 @@ def userLogin():
         session['user'] = user['id']
         response = make_response(jsonify({'success': True}))
         return response
+    elif not password_match:
+        response = make_response(jsonify({'success': False, 'message': 'Incorrect password. Try again.'}))
+        return response
     else:
         response = make_response(jsonify({'success': False, 'message': 'Error logging in. Try again.'}))
         return response
