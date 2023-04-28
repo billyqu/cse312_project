@@ -56,7 +56,7 @@ def userLogin():
     user = db.users.find_one({'username': username})
 
     hashed_password = user.get("password")
-    password_match = bcrypt.checkpw(password.ecnode(), hashed_password)
+    password_match = bcrypt.checkpw(password.encode(), hashed_password)
 
     if user and password_match:
         session['user'] = user['id']
