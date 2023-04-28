@@ -54,7 +54,11 @@ def userLogin():
     password = request.json['password']
 
     user = db.users.find_one({'username': username})
-    if user:
+
+    hashed_password = user.get("password")
+    password_match = bcrypt.checkpw(password.ecnode(), hashed_password)
+
+    if user and password_match:
         session['user'] = user['id']
         response = make_response(jsonify({'success': True}))
         return response
