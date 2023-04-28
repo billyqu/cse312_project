@@ -20,10 +20,14 @@ def index():
 def register():
     return render_template('register.html')
 
-@app.route('/register-account', methods=['POST'])
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/user/register', methods=['POST'])
 def registerAccount():
-    username = request.form['username']
-    password = request.form['password']
+    username = request.json['username']
+    password = request.json['password']
 
     existing_username = db.users.find_one({'username': username})
     if existing_username:
@@ -34,36 +38,40 @@ def registerAccount():
     user_id = get_next_id()
     session['user'] = user_id
 
-    salt = bcrypt.hashpw(password.encode(), salt)
+    salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode(), salt)
 
     user = {'id': user_id, 'username': username, 'password': hashed_password}
     users_collection.insert_one(user)
-    return redirect(url_for('index'))
+    response = make_response(jsonify({'success': True}))
+    return response
 
     # Redirect to index endpoint
     # return render_template('index.html')
-@app.route('/login', methods=["POST"])
-def login():
-    username = request.form['username']
-    password = request.form['password']
+@app.route('/user/login', methods=["POST"])
+def userLogin():
+    username = request.json['username']
+    password = request.json['password']
 
     user = db.users.find_one({'username': username})
-    print(user)
     if user:
         session['user'] = user['id']
-        return redirect(url_for('index'))
+        response = make_response(jsonify({'success': True}))
+        return response
     else:
         response = make_response(jsonify({'success': False, 'message': 'Error logging in. Try again.'}))
         return response
 
-@app.route('/get-user', methods=["GET"])
+@app.route('/user/logout', methods=["POST"])
+def logout():
+    session.pop('user')
+    return redirect(url_for('register'))
+
+@app.route('/user', methods=["GET"])
 def getUser():
     user_session = session['user']
     if user_session:
-        print(user_session, " usersession")
         user = users_collection.find_one({'id': user_session})
-        print(user, " user")
         updated_user = user['username']
         return jsonify({'id': user_session, 'user': {'username': updated_user}})
     return redirect(url_for('register'))

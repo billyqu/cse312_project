@@ -5,8 +5,9 @@
     <script src="../functions.js" crossorigin="anonymous"></script>
   </head>
   <body>
-    <form action="/register-account" method="POST">
-      <h2>Register Form</h2>
+    <h2>Register Form</h2>
+    <span id="error"></span>
+    <form onsubmit="register()">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required />
 
@@ -15,6 +16,33 @@
 
       <button type="submit">Register</button>
     </form>
-
+    <br />
+    <p>Already have an account? <a href="{{ url_for('login') }}">Log in!</a></p>
   </body>
+
+  <script>
+    function register() {
+      event.preventDefault()    
+
+      console.log('register hit!')
+      fetch('/user/register', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value,
+        })
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          if(result.success){
+            window.location.replace('/')
+          }else{
+            document.getElementById('error').innerHTML = result.message
+          }
+        })
+    }
+  </script>
 </html>

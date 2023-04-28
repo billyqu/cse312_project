@@ -8,13 +8,30 @@
   </head>
   <body onload="getUser()">
     <h1 id="welcome">Hello!</h1>
+
+    <button id="logout-btn">Logout</button>
+
   </body>
 
   <script>
+    let logoutBtn = document.getElementById("logout-btn")
+
+    logoutBtn.addEventListener("click", () => {
+      fetch("/user/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => {
+          window.location.replace('/')
+        })
+    })
+
     function getUser() {
       welcomeWrapper = document.getElementById("welcome");
       user = {};
-      fetch("/get-user", {
+      fetch("/user", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -22,7 +39,6 @@
       })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data)
             welcomeWrapper.innerHtml += data.user.username;
         });
     }
