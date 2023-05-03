@@ -11,14 +11,28 @@
 
     <button id="logout-btn">Logout</button>
 
+    <button id="join-lobby">Join Lobby</button>
   </body>
 
   <script>
     let logoutBtn = document.getElementById("logout-btn")
+    let join_lobby = document.getElementById("join-lobby")
 
     logoutBtn.addEventListener("click", () => {
       fetch("/user/logout", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => {
+          window.location.replace('/')
+        })
+    })
+
+    join_lobby.addEventListener("click", () => {
+      fetch("/question", {
+        method: "GET",
         headers: {
           "Content-Type": "application/json"
         }

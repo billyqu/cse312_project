@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for, s
 import pymongo
 import bcrypt
 import html
+import eventlet
+import socketio
 
 app = Flask(__name__)
 app.secret_key = 'random generated key'
@@ -95,6 +97,13 @@ def get_next_id():
     else:
         users_id_collection.insert_one({"last_id": 1})
         return 1
+
+@app.route('/question', methods=["GET"])
+def question():
+    return render_template('test.html')
+
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)
