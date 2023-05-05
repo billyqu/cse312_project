@@ -10,6 +10,7 @@ client = pymongo.MongoClient('mongo')
 db = client["main"]
 users_collection = db['users']
 users_id_collection = db['users_id']
+leaderboard_collection = db['leaderboard']
 
 @app.route('/')
 def index():
@@ -46,6 +47,9 @@ def registerAccount():
 
     user = {'id': user_id, 'username': escaped_username, 'password': hashed_password}
     users_collection.insert_one(user)
+
+    leaderboard_collection.insert_one({username: 0})
+
     response = make_response(jsonify({'success': True}))
     return response
 

@@ -9,6 +9,8 @@
   <body onload="getUser()">
     <h1 id="welcome">Hello!</h1>
 
+    <button id="profile-btn">Profile</button>
+
     <button id="logout-btn">Logout</button>
 
   </body>
@@ -26,6 +28,12 @@
         .then(res => {
           window.location.replace('/')
         })
+    })
+
+    let profileBtn = document.getElementById("profile-btn")
+
+    profileBtn.addEventListener("click", () => {
+      window.location.replace('/profile')
     })
 
     function getUser() {
