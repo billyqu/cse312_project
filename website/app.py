@@ -83,6 +83,17 @@ def getUser():
         return jsonify({'id': user_session, 'user': {'username': updated_user}})
     return redirect(url_for('register'))
 
+@app.route('/profile')
+def profile():
+    user_session = session['user']
+    if user_session:
+        user = users_collection.find_one({'id': user_session})
+        updated_user = user['username']
+        #change {{username}} in profile.html to updated_user
+        return render_template('profile.html')
+    else:
+        return redirect(url_for('index'))
+
 def get_next_id():
     id_object = users_id_collection.find_one({})
     if id_object:
