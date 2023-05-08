@@ -2,8 +2,7 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for, s
 import pymongo
 import bcrypt
 import html
-import eventlet
-import socketio
+
 
 app = Flask(__name__)
 app.secret_key = 'random generated key'
