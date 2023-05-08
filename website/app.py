@@ -2,7 +2,13 @@ from flask import Flask, jsonify, request, render_template, redirect, url_for, s
 import pymongo
 import bcrypt
 import html
+from questions import triviaQuestions
 
+for questionDict in triviaQuestions:
+    question = questionDict["question"]
+    options = questionDict["options"]
+    answer = questionDict["answer"]
+    
 app = Flask(__name__)
 app.secret_key = 'random generated key'
 
@@ -11,6 +17,7 @@ db = client["main"]
 users_collection = db['users']
 users_id_collection = db['users_id']
 leaderboard_collection = db['leaderboard']
+question_collection = db['"question"']
 
 @app.route('/')
 def index():
@@ -112,4 +119,5 @@ def get_next_id():
         return 1
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    print("bruh!")
+    #app.run(host='0.0.0.0', port=8000)
