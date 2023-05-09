@@ -5,23 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <style>
-      body {background-color: #116466;}
-      h1 {color: white;}
-      button {text-align: center;}
-    </style>
   </head>
   <body onload="getUser()">
     <h1 id="welcome">Hello!</h1>
 
+    <button id="profile-btn">Profile</button>
+
     <button id="logout-btn">Logout</button>
 
-    <button id="join-lobby">Join Lobby</button>
   </body>
 
   <script>
     let logoutBtn = document.getElementById("logout-btn")
-    let join_lobby = document.getElementById("join-lobby")
 
     logoutBtn.addEventListener("click", () => {
       fetch("/user/logout", {
@@ -35,16 +30,10 @@
         })
     })
 
-    join_lobby.addEventListener("click", () => {
-      fetch("/question", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => {
-          window.location.replace('/')
-        })
+    let profileBtn = document.getElementById("profile-btn")
+
+    profileBtn.addEventListener("click", () => {
+      window.location.replace('/profile')
     })
 
     function getUser() {
