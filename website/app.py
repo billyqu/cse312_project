@@ -11,6 +11,7 @@ client = pymongo.MongoClient('mongo')
 db = client["main"]
 users_collection = db['users']
 users_id_collection = db['users_id']
+leaderboard_collection = db['leaderboard']
 
 @app.route('/')
 def index():
@@ -47,6 +48,9 @@ def registerAccount():
 
     user = {'id': user_id, 'username': escaped_username, 'password': hashed_password}
     users_collection.insert_one(user)
+
+    leaderboard_collection.insert_one({username: 0})
+
     response = make_response(jsonify({'success': True}))
     return response
 
@@ -86,6 +90,17 @@ def getUser():
         updated_user = user['username']
         return jsonify({'id': user_session, 'user': {'username': updated_user}})
     return redirect(url_for('register'))
+
+@app.route('/profile')
+def profile():
+    user_session = session['user']
+    if user_session:
+        user = users_collection.find_one({'id': user_session})
+        updated_user = user['username']
+        #change {{username}} in profile.html to updated_user
+        return render_template('profile.html')
+    else:
+        return redirect(url_for('index'))
 
 def get_next_id():
     id_object = users_id_collection.find_one({})
