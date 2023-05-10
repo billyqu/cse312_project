@@ -1,20 +1,54 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>CSE312 Project</title>
-    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
   </head>
-  <body>
-    <form>
-      <h2>Register Form</h2>
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required />
+  <body onload="getUser()">
+    <h1 id="welcome">Hello!</h1>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required />
+    <button id="profile-btn">Profile</button>
 
-      <input type="submit" value="Register" />
-    </form>
+    <button id="logout-btn">Logout</button>
 
-    <script src="../functions.js"></script>
   </body>
+
+  <script>
+    let logoutBtn = document.getElementById("logout-btn")
+
+    logoutBtn.addEventListener("click", () => {
+      fetch("/user/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => {
+          window.location.replace('/')
+        })
+    })
+
+    let profileBtn = document.getElementById("profile-btn")
+
+    profileBtn.addEventListener("click", () => {
+      window.location.replace('/profile')
+    })
+
+    function getUser() {
+      welcomeWrapper = document.getElementById("welcome");
+      user = {};
+      fetch("/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+            welcomeWrapper.innerHtml += data.user.username;
+        });
+    }
+  </script>
 </html>

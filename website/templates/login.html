@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>CSE312 Project</title>
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <script src="../functions.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <h2>Login Form</h2>
+    <span id="error"></span>
+    <form onsubmit="login()" method="POST">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required />
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required />
+
+      <button type="submit">Login</button>
+    </form>
+    <br />
+    <p>Don't have an account? <a href="{{ url_for('register') }}">Sign up now!</a></p>
+  </body>
+  <script>
+    function login() {
+      event.preventDefault();
+
+      console.log("register hit!");
+      fetch("/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: document.getElementById("username").value,
+          password: document.getElementById("password").value,
+        }),
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          if (result.success) {
+            window.location.replace("/");
+          } else {
+            document.getElementById("error").innerHTML = result.message;
+          }
+        });
+    }
+  </script>
+</html>
